@@ -60,6 +60,10 @@ class TasksFragment : Fragment() {
         tasksViewModel?.deletedItem?.removeOnPropertyChangedCallback(taskDeleteCallback)
     }
 
+    /**
+     * タスクが削除された際のコールバック
+     * SnackBarを表示する
+     */
     private val taskDeleteCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(p0: Observable?, p1: Int) {
             val deletedItem = tasksViewModel?.deletedItem?.get()
@@ -68,6 +72,10 @@ class TasksFragment : Fragment() {
         }
     }
 
+    /**
+     * TaskListが変化した際のコールバック
+     * 初回はonItemRangeInsertedが呼ばれる
+     */
     private val taskListCallback = object : ObservableList.OnListChangedCallback<ObservableList<Task>>() {
         override fun onChanged(p0: ObservableList<Task>?) {
             Logger.d(tasksViewModel?.items ?: "empty")
