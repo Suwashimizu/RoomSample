@@ -1,9 +1,8 @@
-package suwashizmu.org.roomsample.data.source
+package suwashizmu.org.roomsample.data
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.ForeignKey.CASCADE
-import suwashizmu.org.roomsample.data.Task
 
 /**
  * Created by KEKE on 2018/02/25.
