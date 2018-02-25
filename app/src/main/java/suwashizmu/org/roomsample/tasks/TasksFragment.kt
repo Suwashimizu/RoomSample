@@ -1,8 +1,10 @@
 package suwashizmu.org.roomsample.tasks
 
 import android.databinding.DataBindingUtil
+import android.databinding.Observable
 import android.databinding.ObservableList
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -39,18 +41,31 @@ class TasksFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        listAdapter = TasksAdapter()
+        listAdapter = TasksAdapter({
+            tasksViewModel?.delete(it)
+        })
         binding.listView.adapter = listAdapter
         binding.listView.layoutManager = LinearLayoutManager(activity)
 
         tasksViewModel?.items?.addOnListChangedCallback(taskListCallback)
+        tasksViewModel?.deletedItem?.addOnPropertyChangedCallback(taskDeleteCallback)
+
         tasksViewModel?.start()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroyView() {
+        super.onDestroyView()
 
         tasksViewModel?.items?.removeOnListChangedCallback(taskListCallback)
+        tasksViewModel?.deletedItem?.removeOnPropertyChangedCallback(taskDeleteCallback)
+    }
+
+    private val taskDeleteCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(p0: Observable?, p1: Int) {
+            val deletedItem = tasksViewModel?.deletedItem?.get()
+            Snackbar.make(view!!, "Deleted $deletedItem", Snackbar.LENGTH_LONG)
+                    .show()
+        }
     }
 
     private val taskListCallback = object : ObservableList.OnListChangedCallback<ObservableList<Task>>() {
@@ -80,13 +95,17 @@ class TasksFragment : Fragment() {
         }
     }
 
-    private class TasksAdapter : RecyclerView.Adapter<TaskItemViewHolder>() {
+    private class TasksAdapter(private val itemClickCallback: (task: Task) -> Unit) : RecyclerView.Adapter<TaskItemViewHolder>() {
 
         private var items: List<Task> = emptyList()
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TaskItemViewHolder {
             val binding: TaskItemBinding = DataBindingUtil.inflate(LayoutInflater.from(parent?.context), R.layout.task_item, parent, false)
-            return TaskItemViewHolder(binding.root, binding)
+            return TaskItemViewHolder(binding.root, binding).apply {
+                itemView.setOnClickListener {
+                    itemClickCallback(items[adapterPosition])
+                }
+            }
         }
 
         override fun onBindViewHolder(holder: TaskItemViewHolder?, position: Int) {
