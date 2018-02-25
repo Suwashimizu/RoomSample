@@ -12,10 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.orhanobut.logger.Logger
+import kotlinx.android.synthetic.main.tasks_act.*
 import suwashizmu.org.roomsample.R
 import suwashizmu.org.roomsample.data.Task
 import suwashizmu.org.roomsample.databinding.TaskItemBinding
 import suwashizmu.org.roomsample.databinding.TasksFragBinding
+import java.util.*
 
 
 /**
@@ -34,12 +36,18 @@ class TasksFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.tasks_frag, container, false)
 
 
-
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        activity.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+
+            tasksViewModel?.addTasks(Task(0, Date().toString()))
+        }
 
         listAdapter = TasksAdapter({
             tasksViewModel?.delete(it)
@@ -83,6 +91,10 @@ class TasksFragment : Fragment() {
 
         override fun onItemRangeRemoved(p0: ObservableList<Task>?, p1: Int, p2: Int) {
             Logger.d(tasksViewModel?.items ?: "empty")
+            tasksViewModel?.items?.let {
+                listAdapter.setItems(it)
+                listAdapter.notifyDataSetChanged()
+            }
         }
 
         override fun onItemRangeMoved(p0: ObservableList<Task>?, p1: Int, p2: Int, p3: Int) {

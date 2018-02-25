@@ -4,6 +4,7 @@ import android.databinding.BaseObservable
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableList
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,6 +23,18 @@ class TasksViewModel(private val tasksRepository: TasksRepository) : BaseObserva
         loadTasks()
     }
 
+    fun addTasks(vararg tasks: Task) {
+
+        Completable.create {
+            tasksRepository.insertAll(*tasks)
+            it.onComplete()
+        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { items.addAll(tasks) }
+
+    }
+
     fun delete(task: Task) {
         Single.create<Task> {
             tasksRepository.delete(task)
@@ -32,6 +45,7 @@ class TasksViewModel(private val tasksRepository: TasksRepository) : BaseObserva
                 .subscribe { t1: Task, t2: Throwable? ->
                     t2?.printStackTrace()
                     deletedItem.set(t1)
+                    items.remove(task)
                 }
     }
 
