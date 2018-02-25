@@ -22,6 +22,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    android {
+        dataBinding {
+            enabled = true
+        }
+    }
 }
 
 dependencies {
@@ -36,13 +42,19 @@ dependencies {
 // explicitly depend on RxJava's latest version for bug fixes and new features.
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
+    implementation "com.orhanobut:logger:${loggerVersion}"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
+
+    kapt "com.android.databinding:compiler:3.0.1" //数値はGradleBuildバージョン
+
     testImplementation "org.mockito:mockito-all:${mockitoVersion}"
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:${mockitoKotlinVersion}", { exclude group: 'org.jetbrains.kotlin' }
     testImplementation "org.assertj:assertj-core:$assertjCoreVersion"
+
 
     // Room (use 1.1.0-alpha2 for latest alpha)
     implementation "android.arch.persistence.room:runtime:$roomVersion"

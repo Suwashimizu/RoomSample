@@ -1,9 +1,10 @@
-package suwashizmu.org.roomsample.model
+package suwashizmu.org.roomsample.data.source.local
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import suwashizmu.org.roomsample.model.entity.Task
+import io.reactivex.Single
+import suwashizmu.org.roomsample.data.Task
 
 /**
  * Created by KEKE on 2018/02/24.
@@ -12,13 +13,13 @@ import suwashizmu.org.roomsample.model.entity.Task
 interface TaskDao {
 
     @Query("SELECT * FROM task")
-    fun getAll(): List<Task>
+    fun getAll(): Single<List<Task>>
 
     @Query("SELECT * FROM task WHERE uid IN (:ids)")
-    fun loadAllByIds(ids: List<Int>): List<Task>
+    fun loadAllByIds(ids: List<Int>): Single<List<Task>>
 
     @Query("SELECT * FROM task WHERE summary LIKE :summary")
-    fun findBySummary(summary: String): List<Task>
+    fun findBySummary(summary: String): Single<List<Task>>
 
     @Insert
     fun insertAll(vararg tasks: Task)

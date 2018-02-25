@@ -33,7 +33,7 @@ project.ext {
     okhttpVersion = "3.4.1"
     rxJavaVersion = "2.0.1"
     stethoVersion = "1.5.0"
-    loggerVersion = "2.0.0"
+    loggerVersion = "2.1.1"
     threetenabpVersion = "1.0.5"
 
     mockitoVersion = "1.10.19"

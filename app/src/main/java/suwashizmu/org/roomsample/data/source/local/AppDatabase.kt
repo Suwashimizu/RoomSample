@@ -1,8 +1,8 @@
-package suwashizmu.org.roomsample.model
+package suwashizmu.org.roomsample.data.source.local
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import suwashizmu.org.roomsample.model.entity.Task
+import suwashizmu.org.roomsample.data.Task
 
 /**
  * Created by KEKE on 2018/02/24.

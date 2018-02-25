@@ -1,4 +1,4 @@
-package suwashizmu.org.roomsample.model.entity
+package suwashizmu.org.roomsample.data
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
