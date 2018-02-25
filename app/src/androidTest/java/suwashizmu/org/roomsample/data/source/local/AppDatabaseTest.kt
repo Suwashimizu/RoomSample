@@ -3,6 +3,8 @@ package suwashizmu.org.roomsample.data.source.local
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.orhanobut.logger.AndroidLogAdapter
+import com.orhanobut.logger.Logger
 import junit.framework.Assert.assertEquals
 import org.junit.After
 import org.junit.Before
@@ -29,6 +31,8 @@ class TaskEntityReadWriteTest {
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         taskDao = db.taskDao()
         treeDao = db.getTreePathDao()
+
+        Logger.addLogAdapter(AndroidLogAdapter())
     }
 
     @After
@@ -88,5 +92,42 @@ class TaskEntityReadWriteTest {
 
         assertEquals(id1, 1)
         assertEquals(id2, 2)
+    }
+
+    @Test
+    fun findAncestor() {
+
+        val id1 = taskDao.insert(Task(summary = "task1"))
+        val id2 = taskDao.insert(Task(summary = "task2"))
+        val id3 = taskDao.insert(Task(summary = "task3"))
+
+        treeDao.insertAll(
+                TreePaths(id1, id1),
+
+                TreePaths(id2, id2),
+                TreePaths(id1, id2),
+
+                TreePaths(id3, id3),
+                TreePaths(id1, id3))
+
+        val ancestorOfTask1Tree = treeDao.findAncestorById(id1).test()
+
+        ancestorOfTask1Tree.assertNoErrors()
+        ancestorOfTask1Tree.assertValue { it.size == 3 }
+
+
+        val ancestorOfTask2Tree = treeDao.findAncestorById(id2).test()
+
+        ancestorOfTask2Tree.assertNoErrors()
+        ancestorOfTask2Tree.assertValue { it.size == 1 }
+
+        val descendantOfTask2Tree = treeDao.findDescendantById(id2).test()
+
+        descendantOfTask2Tree.assertNoErrors()
+        descendantOfTask2Tree.assertValue {
+            Logger.d(it)
+            it.size == 2
+        }
+        descendantOfTask2Tree.assertValue { it[0].summary == "task2" && it[1].summary == "task1" }
     }
 }
