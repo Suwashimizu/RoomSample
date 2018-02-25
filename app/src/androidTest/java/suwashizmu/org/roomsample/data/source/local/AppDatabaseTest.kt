@@ -3,6 +3,7 @@ package suwashizmu.org.roomsample.data.source.local
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import junit.framework.Assert.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -38,7 +39,7 @@ class TaskEntityReadWriteTest {
     @Test
     fun writeTaskAndReadInList() {
         val task = Task(summary = firstSummary)
-        taskDao.insertAll(task)
+        val ids = taskDao.insertAll(task)
 
         val list = taskDao.getAll().test()
 
@@ -46,9 +47,7 @@ class TaskEntityReadWriteTest {
         list.assertValue { it.size == 1 }
         list.assertValue { it.first().summary == firstSummary }
 
-        val id = list.values().first().first().uid
-
-        treeDao.insertAll(TreePaths(id, id))
+        treeDao.insertAll(TreePaths(ids[0], ids[0]))
 
         val tree = treeDao.getAll().test()
 
@@ -60,12 +59,11 @@ class TaskEntityReadWriteTest {
     @Test
     fun writeTaskAndDelete() {
         val task = Task(summary = firstSummary)
-        taskDao.insertAll(task)
+        val ids = taskDao.insertAll(task)
 
         val _task = taskDao.getAll().test().values().first().first()
-        val id = _task.uid
 
-        treeDao.insertAll(TreePaths(id, id))
+        treeDao.insertAll(TreePaths(ids[0], ids[0]))
 
         taskDao.delete(_task)
 
@@ -80,5 +78,15 @@ class TaskEntityReadWriteTest {
         tree.assertNoErrors()
         tree.assertValue { it.isEmpty() }
 
+    }
+
+    @Test
+    fun writeTestAtMultiple() {
+        val task = Task(summary = firstSummary)
+        val id1 = taskDao.insert(task)
+        val id2 = taskDao.insert(task)
+
+        assertEquals(id1, 1)
+        assertEquals(id2, 2)
     }
 }

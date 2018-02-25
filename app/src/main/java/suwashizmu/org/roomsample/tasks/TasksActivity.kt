@@ -23,7 +23,7 @@ class TasksActivity : AppCompatActivity() {
                 AppDatabase::class.java, "task-room.db")
                 .build()
 
-        val repository = TasksLocalDataSource(db.taskDao())
+        val repository = TasksLocalDataSource(db.taskDao(), db.getTreePathDao())
         val tasksViewModel = TasksViewModel(repository)
 
         check(supportFragmentManager.findFragmentById(R.id.fragment) as? TasksFragment != null)

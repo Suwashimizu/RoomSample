@@ -23,7 +23,10 @@ interface TaskDao {
     fun findBySummary(summary: String): Single<List<Task>>
 
     @Insert
-    fun insertAll(vararg tasks: Task)
+    fun insert(task: Task): Long
+
+    @Insert
+    fun insertAll(vararg tasks: Task): List<Long>
 
     @Delete
     fun delete(task: Task)
