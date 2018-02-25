@@ -55,7 +55,6 @@ dependencies {
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:${mockitoKotlinVersion}", { exclude group: 'org.jetbrains.kotlin' }
     testImplementation "org.assertj:assertj-core:$assertjCoreVersion"
 
-
     // Room (use 1.1.0-alpha2 for latest alpha)
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
