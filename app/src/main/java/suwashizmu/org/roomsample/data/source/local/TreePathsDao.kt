@@ -21,6 +21,9 @@ interface TreePathsDao {
     @Query("SELECT * FROM task INNER JOIN treePaths ON task.uid = treePaths.ancestor WHERE treePaths.descendant=:uid")
     fun findDescendantById(uid: Long): Single<List<Task>>
 
+    @Query("SELECT * FROM treePaths WHERE ancestor=:ancestor")
+    fun findTreePathsById(ancestor: Long): Single<List<TreePaths>>
+
     @Query("SELECT * FROM treePaths")
     fun getAll(): Single<List<TreePaths>>
 
