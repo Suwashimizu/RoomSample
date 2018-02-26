@@ -24,6 +24,16 @@ interface TreePathsDao {
     @Query("SELECT * FROM treePaths")
     fun getAll(): Single<List<TreePaths>>
 
+    @Query("SELECT *,COUNT(*) as cnt FROM task INNER JOIN treePaths ON task.uid = treePaths.ancestor GROUP BY descendant HAVING cnt = 1")
+    fun getRoots(): Single<List<Task>>
+
+    @Query("SELECT COUNT(*) FROM treePaths")
+    fun getCount(): Single<Int>
+
     @Insert
     fun insertAll(vararg paths: TreePaths)
+
+    //UNION ALL使えない!
+//    @Insert("INSERT INTO treePaths(ancestor,descendant) SELECT t.ancestor,:ancestor FROM treePaths AS t WHERE t.descendant = :descendant UNION ALL SELECT :ancestor,:ancestor")
+//    fun insert(ancestor: Long, descendant: Long, task: Task)
 }
