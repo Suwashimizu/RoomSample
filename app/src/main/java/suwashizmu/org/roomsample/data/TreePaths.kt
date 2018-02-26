@@ -21,5 +21,6 @@ import android.arch.persistence.room.ForeignKey.CASCADE
         primaryKeys = ["ancestor", "descendant"])
 data class TreePaths(
         val ancestor: Long,
-        val descendant: Long
+        val descendant: Long,
+        val pathLength: Int
 )

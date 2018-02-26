@@ -51,7 +51,7 @@ class TaskEntityReadWriteTest {
         list.assertValue { it.size == 1 }
         list.assertValue { it.first().summary == firstSummary }
 
-        treeDao.insertAll(TreePaths(ids[0], ids[0]))
+        treeDao.insertAll(TreePaths(ids[0], ids[0], 0))
 
         val tree = treeDao.getAll().test()
 
@@ -67,7 +67,7 @@ class TaskEntityReadWriteTest {
 
         val _task = taskDao.getAll().test().values().first().first()
 
-        treeDao.insertAll(TreePaths(ids[0], ids[0]))
+        treeDao.insertAll(TreePaths(ids[0], ids[0], 0))
 
         taskDao.delete(_task)
 
@@ -102,13 +102,13 @@ class TaskEntityReadWriteTest {
         val id3 = taskDao.insert(Task(summary = "task3"))
 
         treeDao.insertAll(
-                TreePaths(id1, id1),
+                TreePaths(id1, id1, 0),
 
-                TreePaths(id2, id2),
-                TreePaths(id1, id2),
+                TreePaths(id2, id2, 0),
+                TreePaths(id1, id2, 1),
 
-                TreePaths(id3, id3),
-                TreePaths(id1, id3))
+                TreePaths(id3, id3, 0),
+                TreePaths(id1, id3, 2))
 
         val ancestorOfTask1Tree = treeDao.findAncestorById(id1).test()
 
@@ -150,23 +150,23 @@ task6
         val id4 = taskDao.insert(Task(summary = "task4"))
         val id5 = taskDao.insert(Task(summary = "task5"))
 
-        treeDao.insertAll(TreePaths(id1, id1))
+        treeDao.insertAll(TreePaths(id1, id1, 0))
 
         //insert to task2
-        treeDao.insertAll(TreePaths(id2, id2))
-        treeDao.insertAll(TreePaths(id1, id2))
+        treeDao.insertAll(TreePaths(id2, id2, 0))
+        treeDao.insertAll(TreePaths(id1, id2, 1))
 
         //insert to task4
-        treeDao.insertAll(TreePaths(id4, id4), TreePaths(id1, id4), TreePaths(id2, id4))
+        treeDao.insertAll(TreePaths(id4, id4, 0), TreePaths(id1, id4, 2), TreePaths(id2, id4, 1))
 
         //insert to task3
-        treeDao.insertAll(TreePaths(id3, id3), TreePaths(id1, id3))
+        treeDao.insertAll(TreePaths(id3, id3, 0), TreePaths(id1, id3, 1))
 
         //insert to task5
-        treeDao.insertAll(TreePaths(id5, id5), TreePaths(id3, id5), TreePaths(id1, id5))
+        treeDao.insertAll(TreePaths(id5, id5, 0), TreePaths(id3, id5, 1), TreePaths(id1, id5, 2))
 
         val id6 = taskDao.insert(Task(summary = "task6"))
-        treeDao.insertAll(TreePaths(id6, id6))
+        treeDao.insertAll(TreePaths(id6, id6, 0))
 
         val root = treeDao.getRoots().test()
 
@@ -193,20 +193,21 @@ task1
         val id4 = taskDao.insert(Task(summary = "task4"))
         val id5 = taskDao.insert(Task(summary = "task5"))
 
-        treeDao.insertAll(TreePaths(id1, id1))
+
+        treeDao.insertAll(TreePaths(id1, id1, 0))
 
         //insert to task2
-        treeDao.insertAll(TreePaths(id2, id2))
-        treeDao.insertAll(TreePaths(id1, id2))
+        treeDao.insertAll(TreePaths(id2, id2, 0))
+        treeDao.insertAll(TreePaths(id1, id2, 1))
 
         //insert to task4
-        treeDao.insertAll(TreePaths(id4, id4), TreePaths(id1, id4), TreePaths(id2, id4))
+        treeDao.insertAll(TreePaths(id4, id4, 0), TreePaths(id1, id4, 2), TreePaths(id2, id4, 1))
 
         //insert to task3
-        treeDao.insertAll(TreePaths(id3, id3), TreePaths(id1, id3))
+        treeDao.insertAll(TreePaths(id3, id3, 0), TreePaths(id1, id3, 1))
 
         //insert to task5
-        treeDao.insertAll(TreePaths(id5, id5), TreePaths(id3, id5), TreePaths(id1, id5))
+        treeDao.insertAll(TreePaths(id5, id5, 0), TreePaths(id3, id5, 1), TreePaths(id1, id5, 2))
 
         val treePaths = treeDao.getCount().test()
 
@@ -230,20 +231,21 @@ task1
         val id4 = taskDao.insert(Task(summary = "task4"))
         val id5 = taskDao.insert(Task(summary = "task5"))
 
-        treeDao.insertAll(TreePaths(id1, id1))
+
+        treeDao.insertAll(TreePaths(id1, id1, 0))
 
         //insert to task2
-        treeDao.insertAll(TreePaths(id2, id2))
-        treeDao.insertAll(TreePaths(id1, id2))
+        treeDao.insertAll(TreePaths(id2, id2, 0))
+        treeDao.insertAll(TreePaths(id1, id2, 1))
 
         //insert to task4
-        treeDao.insertAll(TreePaths(id4, id4), TreePaths(id1, id4), TreePaths(id2, id4))
+        treeDao.insertAll(TreePaths(id4, id4, 0), TreePaths(id1, id4, 2), TreePaths(id2, id4, 1))
 
         //insert to task3
-        treeDao.insertAll(TreePaths(id3, id3), TreePaths(id1, id3))
+        treeDao.insertAll(TreePaths(id3, id3, 0), TreePaths(id1, id3, 1))
 
         //insert to task5
-        treeDao.insertAll(TreePaths(id5, id5), TreePaths(id3, id5), TreePaths(id1, id5))
+        treeDao.insertAll(TreePaths(id5, id5, 0), TreePaths(id3, id5, 1), TreePaths(id1, id5, 2))
 
         val tasks = treeDao.findAncestorById(id1).test()
 

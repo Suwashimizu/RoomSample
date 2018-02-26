@@ -25,10 +25,11 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
 
         val id = taskDao.insert(task)
         //自身のツリーを追加する
-        treePathsDao.insertAll(TreePaths(id, id))
+        treePathsDao.insertAll(TreePaths(id, id, 0))
 
         if (ancestor != null && descendant != null) {
-            treePathsDao.insertAll(TreePaths(ancestor, descendant))
+            //TODO Lengthの計算が必要
+            treePathsDao.insertAll(TreePaths(ancestor, descendant, 1))
         }
 
         return id
