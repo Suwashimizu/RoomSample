@@ -24,6 +24,7 @@ interface TreePathsDao {
     @Query("SELECT * FROM treePaths")
     fun getAll(): Single<List<TreePaths>>
 
+    //子孫でグループしカウントが１のものをrootとして抽出する
     @Query("SELECT *,COUNT(*) as cnt FROM task INNER JOIN treePaths ON task.uid = treePaths.ancestor GROUP BY descendant HAVING cnt = 1")
     fun getRoots(): Single<List<Task>>
 
