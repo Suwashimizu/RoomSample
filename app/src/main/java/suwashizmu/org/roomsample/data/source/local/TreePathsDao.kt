@@ -24,6 +24,10 @@ interface TreePathsDao {
     @Query("SELECT * FROM treePaths WHERE ancestor=:ancestor")
     fun findTreePathsById(ancestor: Long): Single<List<TreePaths>>
 
+    //子のみを抽出する
+    @Query("SELECT * FROM task INNER JOIN treePaths ON task.uid = treePaths.descendant WHERE treePaths.ancestor=:uid AND treePaths.pathLength = 1")
+    fun findChildrenById(uid: Long): Single<List<Task>>
+
     @Query("SELECT * FROM treePaths")
     fun getAll(): Single<List<TreePaths>>
 

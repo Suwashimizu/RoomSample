@@ -215,7 +215,7 @@ task1
     }
 
     @Test
-    fun insertAtBetweenTask1Task2() {
+    fun getChildrenByTask1() {
 
 /*
 task1
@@ -251,20 +251,11 @@ task1
 
         tasks.assertValue { it.size == 5 }
 
-        val treePaths = treeDao.findTreePathsById(id1).test()
+        val children = treeDao.findChildrenById(id1).test()
 
-        treePaths.assertValue { it.size == 5 }
-
-//
-//        val id2 = taskDao.insert(Task(summary = "task2"))
-//        treeDao.insertAll(
-//                TreePaths(id2, id2),
-//
-//                TreePaths(id1, id2))
-//
-//        val id3 = taskDao.insert(Task(summary = "task3"))
-//
-//        treeDao.insert(id1, id2, )
+        children.assertValue { it.size == 2 }
+        children.assertValue { it[0].summary == "task2" }
+        children.assertValue { it[1].summary == "task3" }
 
     }
 }
