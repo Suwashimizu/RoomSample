@@ -8,13 +8,15 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import suwashizmu.org.roomsample.Navigator
 import suwashizmu.org.roomsample.data.Task
 import suwashizmu.org.roomsample.data.source.TasksRepository
 
 /**
  * Created by KEKE on 2018/02/25.
  */
-class TasksViewModel(private val tasksRepository: TasksRepository) : BaseObservable() {
+class TasksViewModel(private val tasksRepository: TasksRepository,
+                     private val navigator: Navigator) : BaseObservable() {
 
     val items: ObservableList<Task> = ObservableArrayList<Task>()
     val deletedItem: ObservableField<Task> = ObservableField()
@@ -47,6 +49,10 @@ class TasksViewModel(private val tasksRepository: TasksRepository) : BaseObserva
                     deletedItem.set(t1)
                     items.remove(task)
                 }
+    }
+
+    fun onAddButtonClick() {
+        navigator.gotoDetails(null)
     }
 
     private fun loadTasks() {
