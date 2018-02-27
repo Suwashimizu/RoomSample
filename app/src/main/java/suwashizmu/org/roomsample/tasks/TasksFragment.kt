@@ -1,5 +1,6 @@
 package suwashizmu.org.roomsample.tasks
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.Observable
 import android.databinding.ObservableList
@@ -17,13 +18,17 @@ import suwashizmu.org.roomsample.R
 import suwashizmu.org.roomsample.data.Task
 import suwashizmu.org.roomsample.databinding.TaskItemBinding
 import suwashizmu.org.roomsample.databinding.TasksFragBinding
-import java.util.*
+import suwashizmu.org.roomsample.details.TaskDetailsActivity
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class TasksFragment : Fragment() {
+
+    companion object {
+        private const val REQUEST_DETAILS = 1
+    }
 
     private lateinit var binding: TasksFragBinding
 
@@ -46,7 +51,9 @@ class TasksFragment : Fragment() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
 
-            tasksViewModel?.addTasks(Task(0, Date().toString()))
+            val intent = Intent(context, TaskDetailsActivity::class.java)
+            startActivityForResult(intent, REQUEST_DETAILS)
+//            tasksViewModel?.addTasks(Task(0, Date().toString()))
         }
 
         listAdapter = TasksAdapter({
