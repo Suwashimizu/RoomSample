@@ -2,7 +2,9 @@ package suwashizmu.org.roomsample.details
 
 
 import android.databinding.DataBindingUtil
+import android.databinding.Observable
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.*
 import suwashizmu.org.roomsample.R
@@ -31,6 +33,16 @@ class TaskDetailsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        taskDetailsViewModel?.errorMessage
+                ?.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback() {
+                    override fun onPropertyChanged(p0: Observable?, p1: Int) {
+                        taskDetailsViewModel?.errorMessage?.get()?.let {
+                            Snackbar.make(view!!, it, Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show()
+                        }
+                    }
+                })
     }
 
     override fun onPause() {

@@ -5,7 +5,7 @@ import io.reactivex.Single
 import suwashizmu.org.roomsample.data.Task
 import suwashizmu.org.roomsample.data.TreePaths
 import suwashizmu.org.roomsample.data.source.TasksRepository
-import java.lang.IllegalStateException
+import suwashizmu.org.roomsample.error.ValueEmptyException
 
 /**
  * Created by KEKE on 2018/02/25.
@@ -27,7 +27,7 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
 
                 try {
                     //空ならError
-                    if (task.summary.isBlank()) throw IllegalStateException("must not empty to summary")
+                    if (task.summary.isBlank()) throw ValueEmptyException()
 
                     val id = taskDao.insert(task)
                     //自身のツリーを追加する
