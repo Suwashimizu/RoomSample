@@ -19,6 +19,7 @@ import suwashizmu.org.roomsample.data.Task
 import suwashizmu.org.roomsample.databinding.TaskItemBinding
 import suwashizmu.org.roomsample.databinding.TasksFragBinding
 import suwashizmu.org.roomsample.details.TaskDetailsActivity
+import java.util.*
 
 
 /**
@@ -53,7 +54,7 @@ class TasksFragment : Fragment() {
 
             val intent = Intent(context, TaskDetailsActivity::class.java)
             startActivityForResult(intent, REQUEST_DETAILS)
-//            tasksViewModel?.addTasks(Task(0, Date().toString()))
+            tasksViewModel?.addTasks(Task(0, Date().toString()))
         }
 
         listAdapter = TasksAdapter({

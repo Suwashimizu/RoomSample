@@ -41,4 +41,6 @@ project.ext {
     assertjCoreVersion = "3.5.2"
 
     roomVersion = "1.0.0"
+
+    kodeinVersion = "4.1.0"
 }

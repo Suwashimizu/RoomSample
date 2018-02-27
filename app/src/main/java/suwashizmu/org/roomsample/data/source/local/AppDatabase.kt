@@ -11,5 +11,5 @@ import suwashizmu.org.roomsample.data.TreePaths
 @Database(entities = [Task::class, TreePaths::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
-    abstract fun getTreePathDao(): TreePathsDao
+    abstract fun treePathDao(): TreePathsDao
 }

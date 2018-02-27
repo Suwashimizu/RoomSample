@@ -30,7 +30,7 @@ class TaskEntityReadWriteTest {
         val context = InstrumentationRegistry.getTargetContext()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         taskDao = db.taskDao()
-        treeDao = db.getTreePathDao()
+        treeDao = db.treePathDao()
 
         Logger.addLogAdapter(AndroidLogAdapter())
     }

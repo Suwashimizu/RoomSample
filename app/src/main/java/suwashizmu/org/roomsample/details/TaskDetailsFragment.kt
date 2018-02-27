@@ -15,12 +15,6 @@ import suwashizmu.org.roomsample.databinding.TaskDetailsFragBinding
  */
 class TaskDetailsFragment : Fragment() {
 
-    companion object {
-        fun newInstance(): TaskDetailsFragment {
-            return TaskDetailsFragment()
-        }
-    }
-
     private lateinit var binding: TaskDetailsFragBinding
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
