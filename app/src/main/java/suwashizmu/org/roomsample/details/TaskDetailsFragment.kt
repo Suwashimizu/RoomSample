@@ -4,9 +4,7 @@ package suwashizmu.org.roomsample.details
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import suwashizmu.org.roomsample.R
 import suwashizmu.org.roomsample.databinding.TaskDetailsFragBinding
 
@@ -16,10 +14,17 @@ import suwashizmu.org.roomsample.databinding.TaskDetailsFragBinding
 class TaskDetailsFragment : Fragment() {
 
     private lateinit var binding: TaskDetailsFragBinding
+    var taskDetailsViewModel: TaskDetailsViewModel? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.task_details_frag, container, false)
+
 
         return binding.root
     }
@@ -30,5 +35,29 @@ class TaskDetailsFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        binding.viewModel = taskDetailsViewModel
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        taskDetailsViewModel = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.task_details_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_save -> taskDetailsViewModel?.onSaveButtonClick()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

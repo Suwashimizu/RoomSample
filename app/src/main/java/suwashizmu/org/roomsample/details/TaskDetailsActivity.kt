@@ -5,12 +5,13 @@ import android.support.v7.app.AppCompatActivity
 import com.github.salomonbrys.kodein.LazyKodein
 import com.github.salomonbrys.kodein.android.appKodein
 import com.github.salomonbrys.kodein.instance
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.tasks_act.*
+import suwashizmu.org.roomsample.Navigator
 import suwashizmu.org.roomsample.R
+import suwashizmu.org.roomsample.data.Task
 import suwashizmu.org.roomsample.data.source.TasksRepository
 
-class TaskDetailsActivity : AppCompatActivity() {
+class TaskDetailsActivity : AppCompatActivity(), Navigator {
 
     private val kodein = LazyKodein(appKodein)
 
@@ -20,13 +21,14 @@ class TaskDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val repository: TasksRepository = kodein().instance()
-        repository.getAll()
-                .subscribeOn(Schedulers.io())
-                .subscribe()
 
         val fragment: TaskDetailsFragment = supportFragmentManager.findFragmentById(R.id.fragment) as TaskDetailsFragment
-//        fragment.tasksViewModel = tasksViewModel
+        fragment.taskDetailsViewModel = TaskDetailsViewModel(repository, this)
 
     }
 
+    override fun gotoDetails(task: Task?) {
+        //コールされない
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }
