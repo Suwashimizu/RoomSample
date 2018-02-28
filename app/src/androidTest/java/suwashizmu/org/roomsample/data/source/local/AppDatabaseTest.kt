@@ -110,18 +110,18 @@ class TaskEntityReadWriteTest {
                 TreePaths(id3, id3, 0),
                 TreePaths(id1, id3, 2))
 
-        val ancestorOfTask1Tree = treeDao.findAncestorById(id1).test()
+        val ancestorOfTask1Tree = treeDao.findDescendantByAncestorId(id1).test()
 
         ancestorOfTask1Tree.assertNoErrors()
         ancestorOfTask1Tree.assertValue { it.size == 3 }
 
 
-        val ancestorOfTask2Tree = treeDao.findAncestorById(id2).test()
+        val ancestorOfTask2Tree = treeDao.findDescendantByAncestorId(id2).test()
 
         ancestorOfTask2Tree.assertNoErrors()
         ancestorOfTask2Tree.assertValue { it.size == 1 }
 
-        val descendantOfTask2Tree = treeDao.findDescendantById(id2).test()
+        val descendantOfTask2Tree = treeDao.findAncestorByDescendantId(id2).test()
 
         descendantOfTask2Tree.assertNoErrors()
         descendantOfTask2Tree.assertValue {
@@ -247,7 +247,7 @@ task1
         //insert to task5
         treeDao.insertAll(TreePaths(id5, id5, 0), TreePaths(id3, id5, 1), TreePaths(id1, id5, 2))
 
-        val tasks = treeDao.findAncestorById(id1).test()
+        val tasks = treeDao.findDescendantByAncestorId(id1).test()
 
         tasks.assertValue { it.size == 5 }
 

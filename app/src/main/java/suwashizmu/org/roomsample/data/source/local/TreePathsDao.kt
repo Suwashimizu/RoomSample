@@ -13,13 +13,13 @@ import suwashizmu.org.roomsample.data.TreePaths
 @Dao
 interface TreePathsDao {
 
-    //親がuidのTaskを抽出する,joinする時は子のuid行う
+    //親がuidのTaskを抽出する,joinする時は子のuidで行う
     @Query("SELECT * FROM task INNER JOIN treePaths ON task.uid = treePaths.descendant WHERE treePaths.ancestor=:uid")
-    fun findAncestorById(uid: Long): Single<List<Task>>
+    fun findDescendantByAncestorId(uid: Long): Single<List<Task>>
 
-    //子がuidのTaskを抽出する,joinする時は親のuid行う
+    //子がuidのTaskを抽出する,joinする時は親のuidで行う
     @Query("SELECT * FROM task INNER JOIN treePaths ON task.uid = treePaths.ancestor WHERE treePaths.descendant=:uid")
-    fun findDescendantById(uid: Long): Single<List<Task>>
+    fun findAncestorByDescendantId(uid: Long): Single<List<Task>>
 
     @Query("SELECT * FROM treePaths WHERE ancestor=:ancestor")
     fun findTreePathsById(ancestor: Long): Single<List<TreePaths>>

@@ -24,5 +24,5 @@ interface TasksRepository {
 
     fun delete(task: Task)
 
-    fun getAllTree(): Single<List<TreePaths>>
+    fun getTree(): Single<List<TreePaths>>
 }

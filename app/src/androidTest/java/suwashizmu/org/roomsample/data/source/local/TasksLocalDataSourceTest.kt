@@ -90,7 +90,7 @@ task1
         val loadedTask = repository.loadAllByIds(id2).test()
         loadedTask.assertValue { it.first().summary == "data 2" }
 
-        val treePaths = repository.getAllTree().test()
+        val treePaths = repository.getTree().test()
         treePaths.assertNoErrors()
         treePaths.assertValue { it.size == 3 }
 
@@ -98,12 +98,6 @@ task1
 
     @Test
     fun write_grandchild_and_read() {
-
-/*
-task1
-└── task2
-    └── task3
-*/
 
         val task = Task(summary = "data 1")
         var ids = repository.insertRoot(task).test()
@@ -119,12 +113,49 @@ task1
         ids = repository.insert(task3, id2).test()
         val id3 = ids.values().first()
 
+/*ここまでの状態
+task1
+└── task2
+    └── task3
+*/
+
         val loadedTask = repository.loadAllByIds(id3).test()
         loadedTask.assertValue { it.first().summary == "data 3" }
 
-        val treePaths = repository.getAllTree().test()
+        //自己参照も含めてノードは6
+        var treePaths = repository.getTree().test()
         treePaths.assertNoErrors()
         treePaths.assertValue { it.size == 6 }
+
+        val task4 = Task(summary = "data 4")
+        repository.insert(task4, id3).test()
+
+/*
+task1
+└── task2
+    └── task3
+        └── task4
+*/
+        //自己参照も含めてノードは10
+        treePaths = repository.getTree().test()
+        treePaths.assertNoErrors()
+        treePaths.assertValue { it.size == 10 }
+
+
+/*
+task1
+├── task2
+│    └── task3
+│        └── task4
+└-- task5
+*/
+        val task5 = Task(summary = "data 5")
+        repository.insert(task5, id1).test()
+
+        treePaths = repository.getTree().test()
+        treePaths.assertNoErrors()
+        treePaths.assertValue { it.size == 12 }
+
 
     }
 }

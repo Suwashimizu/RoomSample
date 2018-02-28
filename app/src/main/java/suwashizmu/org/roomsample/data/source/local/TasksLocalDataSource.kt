@@ -61,7 +61,7 @@ class TasksLocalDataSource(private val db: AppDatabase) : TasksRepository {
             }
                     .flatMap { id ->
                         //祖先の取得
-                        treePathsDao.findDescendantById(ancestor).map { Pair(id, it) }
+                        treePathsDao.findAncestorByDescendantId(ancestor).map { Pair(id, it) }
                     }
                     .map { idAndTasks ->
                         treePathsDao.insertAll(*idAndTasks.second.map { TreePaths(it.uid, idAndTasks.first, 0) }.toTypedArray())
@@ -74,5 +74,5 @@ class TasksLocalDataSource(private val db: AppDatabase) : TasksRepository {
 
     override fun delete(task: Task) = taskDao.delete(task)
 
-    override fun getAllTree(): Single<List<TreePaths>> = treePathsDao.getAll()
+    override fun getTree(): Single<List<TreePaths>> = treePathsDao.getAll()
 }
