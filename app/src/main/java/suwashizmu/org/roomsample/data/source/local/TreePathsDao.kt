@@ -39,7 +39,7 @@ interface TreePathsDao {
     fun getCount(): Single<Int>
 
     @Insert
-    fun insertAll(vararg paths: TreePaths)
+    fun insertAll(vararg paths: TreePaths): List<Long>
 
     //UNION ALL使えない!
 //    @Insert("INSERT INTO treePaths(ancestor,descendant) SELECT t.ancestor,:ancestor FROM treePaths AS t WHERE t.descendant = :descendant UNION ALL SELECT :ancestor,:ancestor")

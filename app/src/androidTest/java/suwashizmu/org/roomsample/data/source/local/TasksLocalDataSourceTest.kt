@@ -71,7 +71,13 @@ class TasksLocalDataSourceTest {
     }
 
     @Test
-    fun write_tree_and_read() {
+    fun write_children_and_read() {
+
+/*
+task1
+└── task2
+*/
+
         val task = Task(summary = "data 1")
         var ids = repository.insert(task).test()
 
@@ -84,6 +90,10 @@ class TasksLocalDataSourceTest {
 
         val loadedTask = repository.loadAllByIds(id2).test()
         loadedTask.assertValue { it.first().summary == "data 2" }
+
+        val treePaths = repository.getAllTree().test()
+        treePaths.assertNoErrors()
+        treePaths.assertValue { it.size == 3 }
 
     }
 }

@@ -30,11 +30,13 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
 
                     val id = taskDao.insert(task)
                     //自身のツリーを追加する
-                    treePathsDao.insertAll(TreePaths(id, id, 0))
+                    val myId = treePathsDao.insertAll(TreePaths(id, id, 0)).first()
 
                     if (ancestor != null && descendant != null) {
                         //TODO Lengthの計算が必要
                         treePathsDao.insertAll(TreePaths(ancestor, descendant, 1))
+                    } else if (ancestor != null) {
+                        treePathsDao.insertAll(TreePaths(ancestor, myId, 1))
                     }
 
                     it.onSuccess(id)
@@ -49,4 +51,6 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
     }
 
     override fun delete(task: Task) = taskDao.delete(task)
+
+    override fun getAllTree(): Single<List<TreePaths>> = treePathsDao.getAll()
 }
