@@ -11,7 +11,7 @@ interface TasksRepository {
 
     fun getAll(): Observable<List<Task>>
 
-    fun loadAllByIds(ids: List<Int>): Single<List<Task>>
+    fun loadAllByIds(vararg ids: Long): Single<List<Task>>
 
     fun findBySummary(summary: String): Single<List<Task>>
 

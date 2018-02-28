@@ -17,7 +17,7 @@ interface TaskDao {
     fun getAll(): Single<List<Task>>
 
     @Query("SELECT * FROM task WHERE uid IN (:ids)")
-    fun loadAllByIds(ids: List<Int>): Single<List<Task>>
+    fun loadAllByIds(vararg ids: Long): Single<List<Task>>
 
     @Query("SELECT * FROM task WHERE summary LIKE :summary")
     fun findBySummary(summary: String): Single<List<Task>>

@@ -17,8 +17,7 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
         return taskDao.getAll().toObservable()
     }
 
-
-    override fun loadAllByIds(ids: List<Int>) = taskDao.loadAllByIds(ids)
+    override fun loadAllByIds(vararg ids: Long): Single<List<Task>> = taskDao.loadAllByIds(*ids)
 
     override fun findBySummary(summary: String) = taskDao.findBySummary(summary)
 
