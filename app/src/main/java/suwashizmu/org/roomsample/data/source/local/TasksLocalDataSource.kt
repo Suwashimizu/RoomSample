@@ -10,7 +10,10 @@ import suwashizmu.org.roomsample.error.ValueEmptyException
 /**
  * Created by KEKE on 2018/02/25.
  */
-class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDao: TreePathsDao) : TasksRepository {
+class TasksLocalDataSource(private val db: AppDatabase) : TasksRepository {
+
+    private val taskDao: TaskDao = db.taskDao()
+    private val treePathsDao: TreePathsDao = db.treePathDao()
 
     override fun getAll(): Observable<List<Task>> {
 
@@ -21,7 +24,7 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
 
     override fun findBySummary(summary: String) = taskDao.findBySummary(summary)
 
-    override fun insert(task: Task, ancestor: Long?, descendant: Long?): Single<Long> =
+    override fun insertRoot(task: Task): Single<Long> =
             Single.create<Long> {
 
                 try {
@@ -30,14 +33,7 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
 
                     val id = taskDao.insert(task)
                     //自身のツリーを追加する
-                    val myId = treePathsDao.insertAll(TreePaths(id, id, 0)).first()
-
-                    if (ancestor != null && descendant != null) {
-                        //TODO Lengthの計算が必要
-                        treePathsDao.insertAll(TreePaths(ancestor, descendant, 1))
-                    } else if (ancestor != null) {
-                        treePathsDao.insertAll(TreePaths(ancestor, myId, 1))
-                    }
+                    treePathsDao.insertAll(TreePaths(id, id, 0)).first()
 
                     it.onSuccess(id)
 
@@ -45,6 +41,32 @@ class TasksLocalDataSource(private val taskDao: TaskDao, private val treePathsDa
                     it.onError(e)
                 }
             }
+
+    override fun insert(task: Task, ancestor: Long, descendant: Long?): Single<Long> =
+
+            Single.create<Long> {
+                try {
+                    //空ならError
+                    if (task.summary.isBlank()) throw ValueEmptyException()
+
+                    val id = taskDao.insert(task)
+                    //自身のツリーを追加する
+                    treePathsDao.insertAll(TreePaths(id, id, 0)).first()
+
+                    it.onSuccess(id)
+
+                } catch (e: Exception) {
+                    it.onError(e)
+                }
+            }
+                    .flatMap { id ->
+                        //祖先の取得
+                        treePathsDao.findDescendantById(ancestor).map { Pair(id, it) }
+                    }
+                    .map { idAndTasks ->
+                        treePathsDao.insertAll(*idAndTasks.second.map { TreePaths(it.uid, idAndTasks.first, 0) }.toTypedArray())
+                        idAndTasks.first
+                    }
 
     override fun insertAll(vararg tasks: Task): Single<List<Long>> {
         return Single.just(taskDao.insertAll(*tasks))

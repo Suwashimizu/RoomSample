@@ -31,10 +31,7 @@ class MyApplication : Application(), KodeinAware {
         }
 
         bind<TasksRepository>() with singleton {
-
-            val db: AppDatabase = instance()
-
-            TasksLocalDataSource(db.taskDao(), db.treePathDao())
+            TasksLocalDataSource(instance())
         }
     }
 

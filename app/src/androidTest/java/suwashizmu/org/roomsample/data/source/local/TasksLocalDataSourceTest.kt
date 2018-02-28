@@ -23,10 +23,8 @@ class TasksLocalDataSourceTest {
     fun setup() {
         val context = InstrumentationRegistry.getTargetContext()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-        val taskDao = db.taskDao()
-        val treeDao = db.treePathDao()
 
-        repository = TasksLocalDataSource(taskDao, treeDao)
+        repository = TasksLocalDataSource(db)
     }
 
     @After
@@ -38,7 +36,7 @@ class TasksLocalDataSourceTest {
     @Test
     fun write_task_and_read_in_list() {
         val task = Task(summary = "data 1")
-        val ids = repository.insert(task).test()
+        val ids = repository.insertRoot(task).test()
 
         val list = repository.getAll().test()
 
@@ -65,7 +63,7 @@ class TasksLocalDataSourceTest {
     fun should_be_summary_is_empty_to_exception() {
 
         val task = Task(summary = "")
-        val ids = repository.insert(task).test()
+        val ids = repository.insertRoot(task).test()
 
         ids.assertError(ValueEmptyException::class.java)
     }
@@ -79,13 +77,14 @@ task1
 */
 
         val task = Task(summary = "data 1")
-        var ids = repository.insert(task).test()
+        var ids = repository.insertRoot(task).test()
 
         val id = ids.values().first()
 
         val task2 = Task(summary = "data 2")
 
         ids = repository.insert(task2, id).test()
+        ids.assertNoErrors()
         val id2 = ids.values().first()
 
         val loadedTask = repository.loadAllByIds(id2).test()
@@ -94,6 +93,38 @@ task1
         val treePaths = repository.getAllTree().test()
         treePaths.assertNoErrors()
         treePaths.assertValue { it.size == 3 }
+
+    }
+
+    @Test
+    fun write_grandchild_and_read() {
+
+/*
+task1
+└── task2
+    └── task3
+*/
+
+        val task = Task(summary = "data 1")
+        var ids = repository.insertRoot(task).test()
+
+        val id1 = ids.values().first()
+
+        val task2 = Task(summary = "data 2")
+
+        ids = repository.insert(task2, id1).test()
+        val id2 = ids.values().first()
+
+        val task3 = Task(summary = "data 3")
+        ids = repository.insert(task3, id2).test()
+        val id3 = ids.values().first()
+
+        val loadedTask = repository.loadAllByIds(id3).test()
+        loadedTask.assertValue { it.first().summary == "data 3" }
+
+        val treePaths = repository.getAllTree().test()
+        treePaths.assertNoErrors()
+        treePaths.assertValue { it.size == 6 }
 
     }
 }

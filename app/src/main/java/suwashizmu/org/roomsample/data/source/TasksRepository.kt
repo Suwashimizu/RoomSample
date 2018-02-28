@@ -16,7 +16,9 @@ interface TasksRepository {
 
     fun findBySummary(summary: String): Single<List<Task>>
 
-    fun insert(task: Task, ancestor: Long? = null, descendant: Long? = null): Single<Long>
+    fun insertRoot(task: Task): Single<Long>
+
+    fun insert(task: Task, ancestor: Long, descendant: Long? = null): Single<Long>
 
     fun insertAll(vararg tasks: Task): Single<List<Long>>
 

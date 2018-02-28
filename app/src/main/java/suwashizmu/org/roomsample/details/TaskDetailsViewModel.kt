@@ -23,7 +23,7 @@ class TaskDetailsViewModel(private val tasksRepository: TasksRepository,
 
     fun onSaveButtonClick() {
 
-        tasksRepository.insert(Task(summary = summary))
+        tasksRepository.insertRoot(Task(summary = summary))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
